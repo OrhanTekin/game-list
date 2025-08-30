@@ -2,7 +2,7 @@ let currentGames = []
 
 async function fetchGames() {
     try {
-    const res = await fetch('http://localhost:3000/games')
+    const res = await fetch('https://game-list-vsip.onrender.com')
     currentGames = await res.json()
     renderGames()
     } catch (err) {
