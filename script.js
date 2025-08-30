@@ -51,10 +51,10 @@ async function addGame() {
     currentGames.push({ name, checked: false })
 
     // Save to backend
-    await fetch('http://localhost:3000/games', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ games: currentGames })
+    await fetch('https://game-list-vsip.onrender.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ games: currentGames })
     })
 
     input.value = '' // clear input
