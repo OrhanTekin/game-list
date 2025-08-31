@@ -18,11 +18,17 @@ app.get("/games", async (req, res) => {
   res.json(games);
 });
 
-// Add/update a game
+
+// Save all games (replace collection with new array)
 app.post("/games", async (req, res) => {
-  await writeDb(req.body);
+  const { games } = req.body;
+  if (!Array.isArray(games)) {
+    return res.status(400).json({ error: "games must be an array" });
+  }
+  await writeDb(games);
   res.json({ success: true });
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

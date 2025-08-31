@@ -15,15 +15,12 @@ async function readDb() {
   return collection.find({}).toArray(); // returns all games
 }
 
-async function writeDb(gameObj) {
+async function writeDb(gamesArray) {
   const collection = await connectDb();
-  // upsert = update if exists, insert if not
-  await collection.updateOne(
-    { name: gameObj.name },
-    { checked: gameObj.checked},
-    { $set: gameObj },
-    { upsert: true }
-  );
+  await collection.deleteMany({}); // clear old
+  if (gamesArray.length > 0) {
+    await collection.insertMany(gamesArray); // insert all
+  }
 }
   
 module.exports = { readDb, writeDb };
