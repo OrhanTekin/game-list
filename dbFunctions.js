@@ -1,31 +1,29 @@
-const fs = require('fs') //Filesystem
+const { MongoClient } = require("mongodb");
 
-function readDb(dbName = 'db.json') {
-    // read JSON object from file
-    const data = fs.readFileSync(dbName, 'utf8')
-    return JSON.parse(data)
+const uri = process.env.MONGO_URI; // your connection string from MongoDB Atlas
+const client = new MongoClient(uri);
+
+async function connectDb() {
+  if (!client.topology?.isConnected()) {
+    await client.connect();
+  }
+  return client.db("gameDB").collection("games"); // db name: gameDB, collection: games
 }
 
-function writeDb(obj, dbName = 'db.json') {
-    if (!obj) return console.log('Please provide data to save')
-    try {
-        let currentData = {}
-        if (fs.existsSync(dbName)) {
-            currentData = readDb(dbName)
-        }
-
-        // Merge current data with new data (shallow merge)
-        const mergedData = { ...currentData, ...obj }
-
-        //Überschreibe nur angegebenen Daten
-        fs.writeFileSync(dbName, JSON.stringify(mergedData, null, 2))
-        return console.log('SAVE SUCCESS')
-    } catch (err) {
-        console.error(err)
-        return console.log('FAILED TO WRITE')
-    }
+async function readDb() {
+  const collection = await connectDb();
+  return collection.find({}).toArray(); // returns all games
 }
 
-
-
-module.exports = { readDb, writeDb }
+async function writeDb(gameObj) {
+  const collection = await connectDb();
+  // upsert = update if exists, insert if not
+  await collection.updateOne(
+    { name: gameObj.name },
+    { checked: gameObj.checked},
+    { $set: gameObj },
+    { upsert: true }
+  );
+}
+  
+module.exports = { readDb, writeDb };

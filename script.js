@@ -2,11 +2,11 @@ let currentGames = []
 
 async function fetchGames() {
     try {
-    const res = await fetch('https://game-list-vsip.onrender.com')
-    currentGames = await res.json()
-    renderGames()
+        const res = await fetch('https://game-list-vsip.onrender.com')
+        currentGames = await res.json()
+        renderGames()
     } catch (err) {
-    console.error("Could not fetch games:", err)
+        console.error("Could not fetch games:", err)
     }
 }
 
