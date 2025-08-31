@@ -1,8 +1,16 @@
 const express = require("express");
+const cors = require('cors');
 const { readDb, writeDb } = require("./dbFunctions");
 
-const app = express();
-app.use(express.json());
+const app = express()
+app.use(express.json())
+app.use(cors());
+
+
+// Example routes
+app.get('/', (req, res) => {
+  res.json({ message: 'Server is alive' })
+})
 
 // Get all games
 app.get("/games", async (req, res) => {
