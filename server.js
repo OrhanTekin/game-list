@@ -4,7 +4,10 @@ const { readDb, writeDb } = require("./dbFunctions");
 
 const app = express()
 app.use(express.json())
-app.use(cors());
+
+app.use(cors({
+  origin: "https://orhantekin.github.io"  // allow your frontend
+}));
 
 
 // Example routes
